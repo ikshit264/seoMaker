@@ -17,7 +17,7 @@ export const HeadingBlock: React.FC<BlockProps<HeadingData | string>> = ({ id, i
         : (content as HeadingData) || { text: '' };
 
     // Default level based on depth
-    const currentLevel = data.level || (Math.min(6, depth + 2) as any);
+    const currentLevel = data.level || (Math.min(6, (depth || 0) + 2) as 2 | 3 | 4 | 5 | 6);
 
     const adjustHeight = () => {
         const textarea = textareaRef.current;
@@ -42,7 +42,7 @@ export const HeadingBlock: React.FC<BlockProps<HeadingData | string>> = ({ id, i
     };
 
     if (!isEditMode) {
-        const Tag = `h${currentLevel}` as keyof JSX.IntrinsicElements;
+        const Tag = `h${currentLevel}` as keyof React.JSX.IntrinsicElements;
         return (
             <Tag className={`${fontSizes[currentLevel]} font-black text-zinc-900 tracking-tight mb-8 break-words overflow-wrap-anywhere`}>
                 {data.text || ''}

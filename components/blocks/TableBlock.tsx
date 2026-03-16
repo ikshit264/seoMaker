@@ -92,21 +92,21 @@ export const TableBlock: React.FC<BlockProps<any>> = ({ id, isEditMode, content,
 
   const addCol = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const newRows = rows.map(row => [...row, '']);
+    const newRows = rows.map((row: string[]) => [...row, '']);
     onChange?.({ content: { ...content, rows: newRows } });
   };
 
   const removeRow = (e: React.MouseEvent, index: number) => {
     e.stopPropagation();
     if (rows.length <= 1) return;
-    const newRows = rows.filter((_, i) => i !== index);
+    const newRows = rows.filter((_: string[], i: number) => i !== index);
     onChange?.({ content: { ...content, rows: newRows } });
   };
 
   const removeCol = (e: React.MouseEvent, index: number) => {
     e.stopPropagation();
     if (rows[0].length <= 1) return;
-    const newRows = rows.map(row => row.filter((_, i) => i !== index));
+    const newRows = rows.map((row: string[]) => row.filter((_: string, i: number) => i !== index));
     onChange?.({ content: { ...content, rows: newRows } });
   };
 
@@ -166,7 +166,7 @@ export const TableBlock: React.FC<BlockProps<any>> = ({ id, isEditMode, content,
             <thead>
               <tr className="bg-zinc-50 border-b border-zinc-200">
                 <th className="w-12"></th>
-                {rows[0].map((_, i) => (
+                {rows[0].map((_: string, i: number) => (
                   <th key={i} className="p-3 border-r border-zinc-200 last:border-r-0 group relative bg-zinc-50/50">
                     <div className="flex items-center justify-between gap-2">
                       <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-wider">Col {i + 1}</span>

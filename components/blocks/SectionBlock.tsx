@@ -22,7 +22,7 @@ export const SectionBlock: React.FC<BlockProps<SectionData>> = ({ id, isEditMode
     };
 
     const headingLevel = Math.min(6, depth + 2); // Depth 0 -> H2, Depth 1 -> H3, etc.
-    const Tag = `h${headingLevel}` as keyof JSX.IntrinsicElements;
+    const Tag = `h${headingLevel}` as keyof React.JSX.IntrinsicElements;
 
     if (!isEditMode) {
         return (

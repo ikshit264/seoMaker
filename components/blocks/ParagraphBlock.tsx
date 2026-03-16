@@ -3,7 +3,7 @@
 import React, { useRef, useEffect } from 'react';
 import { BlockProps } from '@/lib/blocks/registry';
 
-export const ParagraphBlock: React.FC<BlockProps<string>> = ({ id, isEditMode, content, depth, onChange }) => {
+export const ParagraphBlock: React.FC<BlockProps<string | any[]>> = ({ id, isEditMode, content, depth, onChange }) => {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     const adjustHeight = () => {

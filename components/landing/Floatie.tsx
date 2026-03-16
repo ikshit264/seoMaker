@@ -33,8 +33,7 @@ export const Floatie = ({
           ease: "easeInOut",
           delay
         },
-        opacity: { duration: 0.8, delay },
-        y: { duration: 0.8, delay } // Initial reveal
+        opacity: { duration: 0.8, delay }
       }}
       className={`absolute z-20 ${className}`}
     >

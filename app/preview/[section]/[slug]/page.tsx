@@ -37,23 +37,15 @@ export default function PreviewPage() {
                 : rawContent;
             } catch (e) { }
 
-            let gridContent: LayoutEngineContent = { layout: { lg: [], md: [], sm: [], xs: [], xxs: [] }, blocks: [] };
+            let gridContent: LayoutEngineContent = { blocks: [] };
 
             // Migrate old blocks array format to grid format if needed
             if (Array.isArray(parsedContent)) {
               gridContent = {
-                layout: { lg: [{ i: 'legacy-block', x: 0, y: 0, w: 12, h: 10 }] as any, md: [], sm: [], xs: [], xxs: [] },
                 blocks: [{ id: 'legacy-block', type: 'rich-text', content: parsedContent }]
               };
-            } else if (parsedContent && parsedContent.layout) {
-              if (Array.isArray(parsedContent.layout)) {
-                gridContent = {
-                  layout: { lg: parsedContent.layout, md: [], sm: [], xs: [], xxs: [] },
-                  blocks: parsedContent.blocks || []
-                };
-              } else {
-                gridContent = parsedContent;
-              }
+            } else if (parsedContent && parsedContent.blocks) {
+              gridContent = parsedContent;
             }
 
             setItem({ ...found, content: gridContent });

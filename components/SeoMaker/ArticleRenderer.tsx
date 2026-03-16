@@ -13,25 +13,6 @@ interface ArticleRendererProps {
   content: any; // published_layout_json or draft_layout_json
 }
 
-/**
- * Article Renderer Component
- * 
- * Renders block editor content from the article's published_layout_json.
- * Automatically handles different block types and renders them with proper UI.
- * 
- * @param content - The article content (published_layout_json)
- * 
- * @example
- * // In your /blogs/[slug]/page.tsx
- * const article = await fetchArticle('blogs', slug);
- * 
- * return (
- *   <article>
- *     <h1>{article.title}</h1>
- *     <ArticleRenderer content={article.published_layout_json} />
- *   </article>
- * );
- */
 export function ArticleRenderer({ content }: ArticleRendererProps) {
   if (!content) {
     return (
@@ -81,34 +62,34 @@ export function ArticleRenderer({ content }: ArticleRendererProps) {
       {blocks.map((block: any, index: number) => {
         switch (block.type) {
           case 'heading':
-            return <HeadingBlock key={block.id || index} data={block.data} />;
+            return <HeadingBlock id={block.id || index} key={block.id || index} content={block.content || block.data} isEditMode={false} depth={0} />;
           
           case 'paragraph':
-            return <ParagraphBlock key={block.id || index} data={block.data} />;
+            return <ParagraphBlock id={block.id || index} key={block.id || index} content={block.content || block.data} isEditMode={false} depth={0} />;
           
           case 'image':
-            return <ImageBlock key={block.id || index} data={block.data} />;
+            return <ImageBlock id={block.id || index} key={block.id || index} content={block.content || block.data} isEditMode={false} depth={0} />;
           
           case 'list':
-            return <ListBlock key={block.id || index} data={block.data} />;
+            return <ListBlock id={block.id || index} key={block.id || index} content={block.content || block.data} isEditMode={false} depth={0} />;
           
           case 'quote':
-            return <QuoteBlock key={block.id || index} data={block.data} />;
+            return <QuoteBlock id={block.id || index} key={block.id || index} content={block.content || block.data} isEditMode={false} depth={0} />;
           
           case 'code':
-            return <CodeBlock key={block.id || index} data={block.data} />;
+            return <CodeBlock id={block.id || index} key={block.id || index} content={block.content || block.data} isEditMode={false} depth={0} />;
           
           case 'divider':
-            return <DividerBlock key={block.id || index} data={block.data} />;
+            return <DividerBlock id={block.id || index} key={block.id || index} content={block.content || block.data} isEditMode={false} depth={0} />;
           
           case 'table':
-            return <TableBlock key={block.id || index} data={block.data} />;
+            return <TableBlock id={block.id || index} key={block.id || index} content={block.content || block.data} isEditMode={false} depth={0} />;
           
           case 'faq':
-            return <FaqBlock key={block.id || index} data={block.data} />;
+            return <FaqBlock id={block.id || index} key={block.id || index} content={block.content || block.data} isEditMode={false} depth={0} />;
           
           case 'embed':
-            return <EmbedBlock key={block.id || index} data={block.data} />;
+            return <EmbedBlock id={block.id || index} key={block.id || index} content={block.content || block.data} isEditMode={false} depth={0} />;
           
           default:
             // Fallback for unknown block types

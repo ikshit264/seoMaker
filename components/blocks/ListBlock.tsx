@@ -12,7 +12,7 @@ interface ListData {
 
 export const ListBlock: React.FC<BlockProps<ListData>> = ({ id, isEditMode, content, depth, onChange }) => {
     const data: ListData = content || { title: 'Highlights', items: [''] };
-    const currentLevel = data.level || (Math.min(6, depth + 2) as any);
+    const currentLevel = data.level || (Math.min(6, (depth || 0) + 2) as 2 | 3 | 4 | 5 | 6);
 
     const updateItem = (index: number, value: string) => {
         const newItems = [...data.items];
@@ -39,7 +39,7 @@ export const ListBlock: React.FC<BlockProps<ListData>> = ({ id, isEditMode, cont
     };
 
     if (!isEditMode) {
-        const Tag = `h${currentLevel}` as keyof JSX.IntrinsicElements;
+        const Tag = `h${currentLevel}` as keyof React.JSX.IntrinsicElements;
         return (
             <div className="mb-8 w-full">
                 <Tag className={`${fontSizes[currentLevel]} font-black text-zinc-900 tracking-tight mb-6 break-words overflow-wrap-anywhere`}>

@@ -1,5 +1,3 @@
-import { PageBlock } from '@/lib/seo-maker';
-
 interface PageRendererProps {
   content: any; // published_layout_json - the block editor content
   className?: string;
@@ -79,34 +77,34 @@ function renderBlocks(blocks: any[]) {
         
         switch (block.type) {
           case 'heading':
-            return <HeadingBlock key={block.id || index} data={block.data} />;
+            return <HeadingBlock key={block.id || index} content={block.content || block.data} isEditMode={false} depth={0} />;
           
           case 'paragraph':
-            return <ParagraphBlock key={block.id || index} data={block.data} />;
+            return <ParagraphBlock key={block.id || index} content={block.content || block.data} isEditMode={false} depth={0} />;
           
           case 'image':
-            return <ImageBlock key={block.id || index} data={block.data} />;
+            return <ImageBlock key={block.id || index} content={block.content || block.data} isEditMode={false} depth={0} />;
           
           case 'list':
-            return <ListBlock key={block.id || index} data={block.data} />;
+            return <ListBlock key={block.id || index} content={block.content || block.data} isEditMode={false} depth={0} />;
           
           case 'quote':
-            return <QuoteBlock key={block.id || index} data={block.data} />;
+            return <QuoteBlock key={block.id || index} content={block.content || block.data} isEditMode={false} depth={0} />;
           
           case 'code':
-            return <CodeBlock key={block.id || index} data={block.data} />;
+            return <CodeBlock key={block.id || index} content={block.content || block.data} isEditMode={false} depth={0} />;
           
           case 'divider':
-            return <DividerBlock key={block.id || index} data={block.data} />;
+            return <DividerBlock key={block.id || index} content={block.data} />;
           
           case 'table':
-            return <TableBlock key={block.id || index} data={block.data} />;
+            return <TableBlock key={block.id || index} content={block.content || block.data} isEditMode={false} depth={0} />;
           
           case 'faq':
-            return <FaqBlock key={block.id || index} data={block.data} />;
+            return <FaqBlock key={block.id || index} content={block.content || block.data} isEditMode={false} depth={0} />;
           
           case 'embed':
-            return <EmbedBlock key={block.id || index} data={block.data} />;
+            return <EmbedBlock key={block.id || index} content={block.content || block.data} isEditMode={false} depth={0} />;
           
           default:
             // Fallback for unknown block types
@@ -127,19 +125,15 @@ function renderBlocks(blocks: any[]) {
 // For now, here are simple implementations as examples:
 // ============================================================================
 
-function HeadingBlock({ data }: { data: any }) {
-  const { text, level = 2 } = data || {};
-  const Tag = `h${level}` as keyof JSX.IntrinsicElements;
+function HeadingBlock({ content }: { content: any }) {
+  const { text, level = 2 } = content || {};
+  const Tag = `h${level}` as keyof React.JSX.IntrinsicElements;
   
-  return (
-    <Tag className="font-bold text-zinc-900 mt-8 mb-4">
-      {text}
-    </Tag>
-  );
+  return React.createElement(Tag, { className: "font-bold text-zinc-900 mt-8 mb-4" }, text);
 }
 
-function ParagraphBlock({ data }: { data: any }) {
-  const { text } = data || {};
+function ParagraphBlock({ content }: { content: any }) {
+  const { text } = content || {};
   
   return (
     <p className="text-zinc-700 leading-relaxed mb-4">
@@ -148,8 +142,8 @@ function ParagraphBlock({ data }: { data: any }) {
   );
 }
 
-function ImageBlock({ data }: { data: any }) {
-  const { url, caption } = data || {};
+function ImageBlock({ content }: { content: any }) {
+  const { url, caption } = content || {};
   
   if (!url) return null;
   
@@ -165,24 +159,24 @@ function ImageBlock({ data }: { data: any }) {
   );
 }
 
-function ListBlock({ data }: { data: any }) {
-  const { items = [], style = 'unordered' } = data || {};
+function ListBlock({ content }: { content: any }) {
+  const { items = [], style = 'unordered' } = content || {};
   
   if (!items.length) return null;
   
   const Tag = style === 'ordered' ? 'ol' : 'ul';
   
-  return (
-    <Tag className="list-disc list-inside space-y-2 mb-4 text-zinc-700">
-      {items.map((item: string, index: number) => (
-        <li key={index}>{item}</li>
-      ))}
-    </Tag>
+  return React.createElement(
+    Tag,
+    { className: "list-disc list-inside space-y-2 mb-4 text-zinc-700" },
+    items.map((item: string, index: number) => (
+      <li key={index}>{item}</li>
+    ))
   );
 }
 
-function QuoteBlock({ data }: { data: any }) {
-  const { text, citation } = data || {};
+function QuoteBlock({ content }: { content: any }) {
+  const { text, citation } = content || {};
   
   return (
     <blockquote className="border-l-4 border-indigo-600 pl-4 py-2 my-6 bg-zinc-50 rounded-r-lg">
@@ -194,8 +188,8 @@ function QuoteBlock({ data }: { data: any }) {
   );
 }
 
-function CodeBlock({ data }: { data: any }) {
-  const { code, language } = data || {};
+function CodeBlock({ content }: { content: any }) {
+  const { code, language } = content || {};
   
   return (
     <pre className="bg-zinc-900 text-green-400 p-4 rounded-lg overflow-x-auto my-4 font-mono text-sm">
@@ -204,12 +198,12 @@ function CodeBlock({ data }: { data: any }) {
   );
 }
 
-function DividerBlock() {
+function DividerBlock({ content }: { content: any }) {
   return <hr className="my-8 border-zinc-200" />;
 }
 
-function TableBlock({ data }: { data: any }) {
-  const { headers = [], rows = [] } = data || {};
+function TableBlock({ content }: { content: any }) {
+  const { headers = [], rows = [] } = content || {};
   
   return (
     <div className="overflow-x-auto my-6">
@@ -241,8 +235,8 @@ function TableBlock({ data }: { data: any }) {
   );
 }
 
-function FaqBlock({ data }: { data: any }) {
-  const { question, answer } = data || {};
+function FaqBlock({ content }: { content: any }) {
+  const { question, answer } = content || {};
   
   return (
     <details className="group my-4">
@@ -256,8 +250,8 @@ function FaqBlock({ data }: { data: any }) {
   );
 }
 
-function EmbedBlock({ data }: { data: any }) {
-  const { url, service } = data || {};
+function EmbedBlock({ content }: { content: any }) {
+  const { url, service } = content || {};
   
   if (!url) return null;
   
