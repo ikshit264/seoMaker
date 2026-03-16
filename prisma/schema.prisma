@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("PLATFORM_MONGODB_URI")
+}
+
+model User {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  email        String        @unique
+  name         String?
+  password     String
+  applications Application[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  sessionLogs  SessionLog[]
+}
+
+model Application {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  appName   String
+  cmsDbUrl  String
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// -----------------------------------------------------------------------------
+// CMS DB MODELS
+// Note: When managing CMS DBs, we will instantiate a new PrismaClient with 
+// the `cmsDbUrl` as the datasource override. These models represent the collections
+// inside the user's personal MongoDB cluster.
+// -----------------------------------------------------------------------------
+
+model Page {
+  id                    String   @id @default(auto()) @map("_id") @db.ObjectId
+  collectionType        String // e.g. "blogs", "vs_pages", "solutions"
+  title                 String
+  slug                  String   @unique
+  seo_title             String?
+  seo_description       String?
+  seo_keywords          String?
+  og_title              String?
+  og_description        String?
+  og_image              String?
+  twitter_title         String?
+  twitter_description   String?
+  twitter_image         String?
+  featured_image        String?
+  draft_layout_json     Json?
+  published_layout_json Json?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@index([collectionType])
+}
+
+model CmsMetadata {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  type      String
+  name      String   @unique
+  createdAt DateTime @default(now())
+}
+
+model CmsLog {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  action    String
+  details   Json?
+  createdAt DateTime @default(now())
+}
+
+model SessionLog {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  status    String // SUCCESS, FAILURE
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+}
