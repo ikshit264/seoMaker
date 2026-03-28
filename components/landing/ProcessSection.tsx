@@ -11,7 +11,7 @@ const cards = [
   },
   {
     title: "Visual Assembly",
-    desc: "Drag, drop, and refine. Our visual engine directly manipulates your MongoDB schema in real-time. No staging, no waiting.",
+    desc: "Drag, drop, and refine. Our visual engine directly manipulates your PostgreSQL tables or MongoDB collections in real-time. No staging, no waiting.",
     icon: Layout,
     color: "#0891b2"
   },
@@ -26,7 +26,7 @@ const cards = [
 export default function ProcessSection() {
   return (
 
-    <section className="relative bg-transparent py-24 px-6">
+    <section id="process" className="relative bg-transparent py-24 px-6">
       <div className="max-w-6xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           
@@ -50,7 +50,7 @@ export default function ProcessSection() {
             </h2>
 
             <p className="text-lg sm:text-xl text-zinc-500 font-semibold italic max-w-md">
-              We've optimized every millisecond of the development lifecycle.
+              We&apos;ve optimized every millisecond of the development lifecycle.
             </p>
           </div>
 

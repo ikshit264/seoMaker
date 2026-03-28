@@ -32,29 +32,29 @@ export default function AppsPage() {
   const router = useRouter();
 
   useEffect(() => {
-    fetchApplications();
-  }, []);
+    const fetchApplications = async () => {
+      try {
+        const res = await fetch('/api/applications');
+        const data = await res.json();
 
-  const fetchApplications = async () => {
-    try {
-      const res = await fetch('/api/applications');
-      const data = await res.json();
-
-      if (!res.ok) {
-        if (res.status === 401) {
-          router.push('/login');
-          return;
+        if (!res.ok) {
+          if (res.status === 401) {
+            router.push('/login');
+            return;
+          }
+          throw new Error(data.error || 'Failed to fetch applications');
         }
-        throw new Error(data.error || 'Failed to fetch applications');
-      }
 
-      setApplications(data.applications || []);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+        setApplications(data.applications || []);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchApplications();
+  }, [router]);
 
   const handleOpenApp = (app: Application) => {
     // Set the selected app in localStorage
@@ -103,8 +103,9 @@ export default function AppsPage() {
     try {
       // Hide credentials in the URL
       if (url.includes('@')) {
+        const protocol = url.split('://')[0] || 'db';
         const parts = url.split('@');
-        return 'mongodb://***@' + parts[1];
+        return `${protocol}://***@${parts[1]}`;
       }
       return url.substring(0, 30) + '...';
     } catch {

@@ -2,28 +2,22 @@
 
 import React, { useState } from 'react';
 import { 
-    Type, Image as ImageIcon, AlignLeft, Layout as LayoutIcon, 
+    Image as ImageIcon, AlignLeft, Layout as LayoutIcon, 
     Code, Quote, Table, Link as LinkIcon, Plus, List, HelpCircle, 
-    ArrowRightLeft, Heading2, Heading3, Box, X, MoreHorizontal
+    ArrowRightLeft, Box, X
 } from 'lucide-react';
 import WidgetWrapper from './WidgetWrapper';
 import { blockRegistry } from '@/lib/blocks';
-
-export interface GridBlockData {
-  id: string;
-  type: string;
-  content?: any;
-}
-
-export interface LayoutEngineContent {
-  blocks: GridBlockData[];
-}
+import { GridBlockData, LayoutEngineContent, createBlockId, normalizeLayoutContent } from '@/lib/editor-content';
 
 interface LayoutEngineProps {
   mode: 'edit' | 'view';
   value: LayoutEngineContent | null;
   onChange?: (val: LayoutEngineContent) => void;
   depth?: number;
+  selectedBlockId?: string | null;
+  onSelectBlock?: (id: string | null) => void;
+  onGenerateAiForSection?: (id: string) => void;
 }
 
 // Mini Block Picker for nested contexts
@@ -70,20 +64,22 @@ function BlockPicker({ onSelect, depth = 0, className = "" }: { onSelect: (type:
 }
 
 // Recursive builder component used for nested sections
-export function SectionBuilder({ mode, blocks, onChange, depth = 0 }: { 
+export function SectionBuilder({ mode, blocks, onChange, depth = 0, selectedBlockId, onSelectBlock, onGenerateAiForSection }: { 
     mode: 'edit' | 'view', 
     blocks: GridBlockData[], 
     onChange: (newBlocks: GridBlockData[]) => void,
-    depth?: number
+    depth?: number,
+    selectedBlockId?: string | null,
+    onSelectBlock?: (id: string | null) => void,
+    onGenerateAiForSection?: (id: string) => void,
 }) {
     const [activePicker, setActivePicker] = useState<number | 'bottom' | null>(null);
 
     const addBlock = (type: string, index?: number) => {
         if (mode === 'view') return;
         const blockDef = blockRegistry.get(type);
-        const id = `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
         const newBlock: GridBlockData = { 
-            id, 
+            id: createBlockId(type), 
             type, 
             content: blockDef?.defaultContent || '' 
         };
@@ -130,6 +126,7 @@ export function SectionBuilder({ mode, blocks, onChange, depth = 0 }: {
                 isEditMode={mode === 'edit'}
                 content={block.content}
                 depth={depth}
+                onGenerateAiForSection={onGenerateAiForSection}
                 onChange={(updates) => updateBlock(block.id, updates)}
             />
         );
@@ -168,6 +165,9 @@ export function SectionBuilder({ mode, blocks, onChange, depth = 0 }: {
                             onMoveUp={index > 0 ? () => moveBlock(block.id, 'up') : undefined}
                             onMoveDown={index < blocks.length - 1 ? () => moveBlock(block.id, 'down') : undefined}
                             mode="edit"
+                            selected={selectedBlockId === block.id}
+                            onSelect={onSelectBlock}
+                            onGenerateAi={block.type === 'section' ? onGenerateAiForSection : undefined}
                         >
                             {renderBlockContent(block)}
                         </WidgetWrapper>
@@ -227,10 +227,8 @@ export function SectionBuilder({ mode, blocks, onChange, depth = 0 }: {
     );
 }
 
-export default function LayoutEngine({ mode, value, onChange, depth = 0 }: LayoutEngineProps) {
-  const blocks = Array.isArray(value?.blocks) 
-    ? value.blocks.filter(b => b && b.id) 
-    : [];
+export default function LayoutEngine({ mode, value, onChange, depth = 0, selectedBlockId, onSelectBlock, onGenerateAiForSection }: LayoutEngineProps) {
+  const blocks = normalizeLayoutContent(value).blocks;
 
   const handleBlocksChange = (newBlocks: GridBlockData[]) => {
       onChange?.({ blocks: newBlocks });
@@ -238,9 +236,8 @@ export default function LayoutEngine({ mode, value, onChange, depth = 0 }: Layou
 
   const addTopLevelBlock = (type: string, initialContent?: any) => {
     const blockDef = blockRegistry.get(type);
-    const id = `block-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     const newBlock: GridBlockData = { 
-      id, 
+      id: createBlockId(type), 
       type, 
       content: initialContent || blockDef?.defaultContent || '' 
     };
@@ -286,7 +283,15 @@ export default function LayoutEngine({ mode, value, onChange, depth = 0 }: Layou
             <p className="text-sm font-medium">Your canvas is empty. Start by adding a New Section.</p>
           </div>
         ) : (
-          <SectionBuilder mode="edit" blocks={blocks} onChange={handleBlocksChange} depth={depth} />
+          <SectionBuilder
+            mode="edit"
+            blocks={blocks}
+            onChange={handleBlocksChange}
+            depth={depth}
+            selectedBlockId={selectedBlockId}
+            onSelectBlock={onSelectBlock}
+            onGenerateAiForSection={onGenerateAiForSection}
+          />
         )}
       </div>
 
@@ -317,3 +322,5 @@ export default function LayoutEngine({ mode, value, onChange, depth = 0 }: Layou
     </div>
   );
 }
+
+export type { GridBlockData, LayoutEngineContent };

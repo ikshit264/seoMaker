@@ -117,7 +117,7 @@ export const DashboardMockup = () => {
             className="absolute bottom-6 right-6 bg-emerald-500 text-white px-4 py-3 rounded-xl flex items-center gap-3 shadow-xl"
            >
               <CheckCircle2 className="w-5 h-5" />
-              <span className="text-sm font-bold">Successfully saved to MongoDB</span>
+              <span className="text-sm font-bold">Successfully saved to your database</span>
            </motion.div>
         </div>
       </div>

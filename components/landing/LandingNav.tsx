@@ -14,6 +14,12 @@ interface NavProps {
 
 export const LandingNav = ({ textColor, navBg, navBorder, isAuthenticated }: NavProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const navItems = [
+    { label: 'Features', href: '#features' },
+    { label: 'Process', href: '#process' },
+    { label: 'Pricing', href: '#pricing' },
+    { label: 'Docs', href: '#docs' },
+  ];
 
   return (
     <motion.nav 
@@ -32,14 +38,14 @@ export const LandingNav = ({ textColor, navBg, navBorder, isAuthenticated }: Nav
         </motion.div>
         
         <div className="hidden lg:flex items-center gap-8">
-          {['Features', 'Process', 'Pricing', 'Docs'].map((item) => (
+          {navItems.map((item) => (
             <motion.a
-              key={item}
-              href={`#${item.toLowerCase()}`}
+              key={item.label}
+              href={item.href}
               style={{ color: textColor }}
               className="text-sm font-bold opacity-70 hover:opacity-100 transition-opacity"
             >
-              {item}
+              {item.label}
             </motion.a>
           ))}
         </div>
@@ -79,14 +85,14 @@ export const LandingNav = ({ textColor, navBg, navBorder, isAuthenticated }: Nav
             className="lg:hidden bg-white border-b border-zinc-100 overflow-hidden"
           >
             <div className="flex flex-col p-6 gap-4">
-              {['Features', 'Process', 'Pricing', 'Docs'].map((item) => (
+              {navItems.map((item) => (
                 <a
-                  key={item}
-                  href={`#${item.toLowerCase()}`}
+                  key={item.label}
+                  href={item.href}
                   onClick={() => setIsOpen(false)}
                   className="text-lg font-bold text-zinc-900 hover:text-indigo-600 transition-colors"
                 >
-                  {item}
+                  {item.label}
                 </a>
               ))}
               <div className="h-px bg-zinc-100 my-2" />

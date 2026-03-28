@@ -63,7 +63,7 @@ export default function NewAppPage() {
                     <Database className="w-8 h-8" />
                 </div>
                 <h1 className="text-3xl font-bold text-zinc-900">Create your first Application</h1>
-                <p className="text-zinc-500 mt-2">Connect your MongoDB database to start building.</p>
+                <p className="text-zinc-500 mt-2">Connect your PostgreSQL or MongoDB database to start building.</p>
             </div>
 
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="bg-white p-8 rounded-2xl border border-zinc-200 shadow-sm">
@@ -80,16 +80,16 @@ export default function NewAppPage() {
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-zinc-700 mb-1">MongoDB Connection String</label>
+                        <label className="block text-sm font-medium text-zinc-700 mb-1">Database Connection String</label>
                         <input
                             type="text"
                             required
                             value={cmsDbUrl}
                             onChange={(e) => setCmsDbUrl(e.target.value)}
                             className="w-full px-4 py-3 rounded-xl border border-zinc-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            placeholder="mongodb+srv://..."
+                            placeholder="postgresql://... or mongodb+srv://..."
                         />
-                        <p className="text-xs text-zinc-500 mt-2">This is where your CMS content will be stored securely.</p>
+                        <p className="text-xs text-zinc-500 mt-2">This is where your CMS content will be stored securely for either SQL or NoSQL mode.</p>
                     </div>
 
                     {error && <div className="p-4 bg-red-50 text-red-600 rounded-xl text-sm border border-red-100">{error}</div>}

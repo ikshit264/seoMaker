@@ -7,6 +7,7 @@ export interface BlockProps<TData = any, TConfig = any> {
   config?: TConfig;
   styles?: React.CSSProperties;
   depth: number;
+  onGenerateAiForSection?: (id: string) => void;
   onChange?: (updates: Partial<{ content: TData; config: TConfig; styles: React.CSSProperties }>) => void;
 }
 

@@ -106,6 +106,17 @@ export async function fetchArticle(section: string, slug: string) {
   }
 }
 
+type FetchArticleResult = Awaited<ReturnType<typeof fetchArticle>>;
+
+function toIsoString(value: Date | string | null | undefined) {
+  if (!value) {
+    return undefined;
+  }
+
+  const date = value instanceof Date ? value : new Date(value);
+  return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
+}
+
 /**
  * Helper: Generate SEO Metadata
  * 
@@ -121,7 +132,7 @@ export async function fetchArticle(section: string, slug: string) {
  *   return generateSeoMetadata(article);
  * }
  */
-export function generateSeoMetadata(article: ReturnType<typeof fetchArticle> extends Promise<infer T> ? T : null) {
+export function generateSeoMetadata(article: FetchArticleResult) {
   if (!article) {
     return {
       title: 'Not Found',
@@ -137,8 +148,8 @@ export function generateSeoMetadata(article: ReturnType<typeof fetchArticle> ext
       description: article.og_description || article.seo_description,
       images: article.og_image || article.featured_image ? [{ url: article.og_image || article.featured_image! }] : undefined,
       type: 'article' as const,
-      publishedTime: article.createdAt.toISOString(),
-      modifiedTime: article.updatedAt.toISOString(),
+      publishedTime: toIsoString(article.createdAt),
+      modifiedTime: toIsoString(article.updatedAt),
     },
     twitter: {
       card: 'summary_large_image' as const,
@@ -167,15 +178,15 @@ export function generateSeoMetadata(article: ReturnType<typeof fetchArticle> ext
  *   }}
  * />
  */
-export function generateStructuredData(article: NonNullable<ReturnType<typeof fetchArticle>>, siteUrl: string) {
+export function generateStructuredData(article: NonNullable<FetchArticleResult>, siteUrl: string) {
   return {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     "headline": article.seo_title || article.title,
     "description": article.seo_description,
     "image": article.featured_image ? `${siteUrl}${article.featured_image}` : undefined,
-    "datePublished": article.createdAt.toISOString(),
-    "dateModified": article.updatedAt.toISOString(),
+    "datePublished": toIsoString(article.createdAt),
+    "dateModified": toIsoString(article.updatedAt),
     "author": {
       "@type": "Organization",
       "name": "Your Company",

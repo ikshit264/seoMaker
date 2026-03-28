@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import { BlockProps } from '@/lib/blocks/registry';
@@ -10,7 +10,7 @@ interface SectionData {
     blocks: any[];
 }
 
-export const SectionBlock: React.FC<BlockProps<SectionData>> = ({ id, isEditMode, content, depth, onChange }) => {
+export const SectionBlock: React.FC<BlockProps<SectionData>> = ({ id, isEditMode, content, depth, onChange, onGenerateAiForSection }) => {
     const data: SectionData = content || { title: 'New Section', blocks: [] };
 
     const updateTitle = (val: string) => {
@@ -51,7 +51,7 @@ export const SectionBlock: React.FC<BlockProps<SectionData>> = ({ id, isEditMode
             <div className="bg-zinc-900 rounded-3xl p-6 shadow-xl">
                 <div className="flex items-center gap-3 mb-2 opacity-50">
                     <Box className="w-4 h-4 text-white" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Section Bound — H{headingLevel}</span>
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Section Bound - H{headingLevel}</span>
                 </div>
                 <input
                     type="text"
@@ -68,8 +68,10 @@ export const SectionBlock: React.FC<BlockProps<SectionData>> = ({ id, isEditMode
                     blocks={data.blocks || []} 
                     onChange={updateBlocks} 
                     depth={depth + 1} 
+                    onGenerateAiForSection={onGenerateAiForSection}
                 />
             </div>
         </div>
     );
 };
+

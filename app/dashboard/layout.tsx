@@ -10,6 +10,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [sections, setSections] = useState<{ cms: string[], archived: string[] }>({ cms: [], archived: [] });
   const [appName, setAppName] = useState('CMS');
   const [loading, setLoading] = useState(true);
+  const [dbError, setDbError] = useState('');
   const [archivedOpen, setArchivedOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const router = useRouter();
@@ -52,6 +53,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         localStorage.setItem('cms_app_name', currentApp.appName);
         localStorage.setItem('cms_app_id', currentApp.id);
         setAppName(currentApp.appName);
+        setDbError('');
         window.dispatchEvent(new Event('app-switched'));
 
         // 3. Fetch specific app's sections
@@ -59,13 +61,22 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           headers: { 'x-db-url': currentApp.cmsDbUrl }
         });
       })
-      .then(res => res?.json())
+      .then(async res => {
+        if (!res) return null;
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data?.error || 'Failed to load database sections');
+        }
+        return data;
+      })
       .then(data => {
         if (data?.sections) setSections(data.sections);
         setLoading(false);
       })
       .catch(err => {
         console.error(err);
+        setSections({ cms: [], archived: [] });
+        setDbError(err?.message || 'Failed to connect to the selected database.');
         setLoading(false);
       });
   }, [router, pathname]);
@@ -305,6 +316,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           animate={{ opacity: 1, y: 0 }}
           className="p-8"
         >
+          {dbError && (
+            <div className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700">
+              <div className="font-semibold">Database connection failed</div>
+              <div className="mt-1">{dbError}</div>
+              <div className="mt-2">
+                Open <Link href="/apps" className="font-semibold underline">Applications</Link> and switch to a working database URL.
+              </div>
+            </div>
+          )}
           {children}
         </motion.div>
       </main>

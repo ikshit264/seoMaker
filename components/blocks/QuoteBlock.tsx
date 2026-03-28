@@ -25,7 +25,7 @@ export const QuoteBlock: React.FC<BlockProps<string>> = ({ id, isEditMode, conte
         return (
             <blockquote className="pl-8 border-l-4 border-indigo-600 my-8">
                 <p className="text-2xl font-bold italic text-zinc-700 leading-relaxed break-words overflow-wrap-anywhere">
-                    "{content || ''}"
+                    &ldquo;{content || ''}&rdquo;
                 </p>
             </blockquote>
         );
@@ -48,3 +48,4 @@ export const QuoteBlock: React.FC<BlockProps<string>> = ({ id, isEditMode, conte
         </div>
     );
 };
+

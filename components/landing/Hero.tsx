@@ -38,17 +38,17 @@ export const Hero = ({ textColor, isAuthenticated }: HeroProps) => {
         </motion.h1>
         
         <p className="text-lg md:text-2xl text-zinc-500 max-w-3xl mx-auto leading-relaxed font-semibold mb-10 sm:mb-14 px-6 sm:px-4">
-          The high-fidelity visual builder for Next.js that syncs directly with your MongoDB. Zero vendor lock-in, just pure performance.
+          The high-fidelity visual builder that works directly with your PostgreSQL or MongoDB database, so your team keeps full ownership, instant access, and complete confidence in how content moves from editor to website.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 px-6 sm:px-0">
-          <Link href="/signup" className="w-full sm:w-auto group relative flex items-center justify-center gap-3 bg-zinc-900 text-white px-8 sm:px-10 py-5 sm:py-6 rounded-2xl text-lg sm:text-xl font-black transition-all hover:scale-105 active:scale-95 shadow-[0_20px_40px_rgba(0,0,0,0.2)]">
+          <Link href={isAuthenticated ? "/apps" : "/signup"} className="w-full sm:w-auto group relative flex items-center justify-center gap-3 bg-zinc-900 text-white px-8 sm:px-10 py-5 sm:py-6 rounded-2xl text-lg sm:text-xl font-black transition-all hover:scale-105 active:scale-95 shadow-[0_20px_40px_rgba(0,0,0,0.2)]">
             Start Building Free
             <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform" />
           </Link>
-          <button className="w-full sm:w-auto flex items-center justify-center gap-2 text-zinc-900 px-8 sm:px-10 py-5 sm:py-6 rounded-2xl text-lg sm:text-xl font-black border-2 border-zinc-200 hover:bg-white/50 transition-all">
-            Book a Demo
-          </button>
+          <Link href="#docs" className="w-full sm:w-auto flex items-center justify-center gap-2 text-zinc-900 px-8 sm:px-10 py-5 sm:py-6 rounded-2xl text-lg sm:text-xl font-black border-2 border-zinc-200 hover:bg-white/50 transition-all">
+            Explore Guides
+          </Link>
         </div>
       </motion.div>
 
@@ -74,8 +74,8 @@ export const Hero = ({ textColor, isAuthenticated }: HeroProps) => {
         <Floatie className="-bottom-16 -right-10 lg:-right-20" delay={0.5} duration={7} yOffset={-30}>
           <Database className="w-6 h-6 text-emerald-500" />
           <div>
-            <div className="font-black text-zinc-900 text-sm">Your MongoDB</div>
-            <div className="text-[8px] text-zinc-400 font-black uppercase tracking-widest">100% Data ownership</div>
+            <div className="font-black text-zinc-900 text-sm">Your Database</div>
+            <div className="text-[8px] text-zinc-400 font-black uppercase tracking-widest">Direct access, full ownership</div>
           </div>
         </Floatie>
 
